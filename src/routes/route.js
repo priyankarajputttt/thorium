@@ -1,11 +1,74 @@
 const express = require('express');
 const router = express.Router();
 const obj=require('./logger')
+const lapp=require('./logger2')
+const map=require('./helper')
 
 router.get('/test-me', function (req, res) {
     res.send('My first ever api!')
     obj.sanju
     console.log(obj.tpn)
+    lapp.abc
+    map.k
+    map.h
+    map.priyanka
+    
 });
+
+
+
+router.get('/movies',function (req,res){
+    res.send(['pushpa',"delhi",'luck','shiddat'])
+})
+
+
+
+router.get('/movies/:id',function(req,res){
+    let a=['pushpa','delhi','luck','shiddat']
+    let movie=req.params.id
+    res.send(a[movie])
+})
+
+router.get('/movies/:id',function(req,res){
+    let b=["pushpa","delhi","luck",'shiddat']
+    let movie=req.params.id
+    if(movie>b.length-1){
+        res.send('no')
+    }else{
+        res.send(b[movie])
+    }
+})
+
+
+router.get('/films/:id',function(req,res){
+    let movie=[{
+        'id':1,
+        name:"The shining"
+    },{
+        "id":2,
+        name:'incendies'
+    },{
+        "id":3,
+        name:'rang de basanti'
+    },{
+        "id":4,
+        name:"finding demo"
+    }]
+
+
+    let value=req.parames.id
+    res.send(movie)
+
+       
+    
+       
+})
+
+
+ 
+
+
+
+
 
 module.exports = router;
