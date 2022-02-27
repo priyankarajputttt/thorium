@@ -23,6 +23,9 @@ router.get('/movies',function (req,res){
 
 
 
+
+
+
 router.get('/movies/:id',function(req,res){
     let a=['pushpa','delhi','luck','shiddat']
     let movie=req.params.id
@@ -63,6 +66,46 @@ router.get('/films/:id',function(req,res){
     
        
 })
+
+
+
+
+
+router.get('/films/:filmId', function(req,res){
+    let films = [ {
+        id: 1,
+        name: "The Shining"
+       }, {
+        id: 2,
+        name: "Incendies"
+       }, {
+        id: 3,
+        name: "Rang de Basanti"
+       }, {
+        id: 4,
+        name: "Finding Demo"
+       }]
+    let values = req.params.filmId;
+    if(values>films.length-1){
+        res.send(" No movie exists with this id")
+    }else{
+        res.send(films[values])
+    }
+
+})
+const usercontroller = require("../controller/userController");
+
+router.post("/createNewBook", usercontroller.createNewBook); //accessing this function from usercontroller.js
+
+router.get("/getBookList", userController.getBookList); //accessing this function from usercontroller.js
+
+module.exports = router;
+
+
+
+
+
+
 
 
  
