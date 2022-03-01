@@ -7,10 +7,10 @@ const allController = require('../controllers/allController')
 
 
 
-router.post('/createNewAuthor', allController.createNewAuthor)
-router.post('/createNewBook', allController.createNewBook)
-router.get('/allBooks', allController.allBooks)
-router.get('/updatedBookPrice', allController.upadatedBookPrice)
-router.get('/authorsName', allController.authorsName)
+router.post('/createAuthor', allController.createAuthor)
+router.post('/createBook', allController.createBook)
+router.get('/bookList', allController.bookList)
+router.get('/changePrice', allController.changePrice)
+router.get('/authorNames', allController.authorNames)
 
 module.exports = router;
