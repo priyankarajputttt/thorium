@@ -102,7 +102,32 @@ router.get("/getBookList", userController.getBookList); //accessing this functio
 module.exports = router;
 
 
+const express = require('express');
+const router = express.Router();
 
+const BookController= require("../controllers/bookController")
+
+
+
+router.post("/createBook", BookController.createBook)
+
+router.get("/bookList", BookController.bookList)
+
+router.post("/getBooksInYear", BookController.getBooksInYear)
+
+router.post("/getParticularBooks", BookController.getParticularBooks)
+
+router.get("/getXINRBooks", BookController.getXINRBooks)
+
+router.get("/getRandomBooks", BookController.getRandomBooks)
+
+
+
+
+
+
+
+module.exports = router;
 
 
 
