@@ -16,6 +16,22 @@ mongoose.connect("mongodb+srv://users-open-to-all:hiPassword123@cluster0.uh35t.m
 	 
 app.use('/', route);
 
+app.use(requestIp.mw({attributeName:'myIp'}))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+app.use(function(req,res,next){
+   
+  let newData=moment().format('YYYY-MM-DD HH:mm:ss:a');
+  let ip=req.myIp;
+  let apiMy=req.originalUrl;
+  console.log(newData,ip,apiMy)
+    next()
+})
+
 app.listen(process.env.PORT || 3000, function() {
 	console.log('Express app running on port ' + (process.env.PORT || 3000))
 });
+
+
