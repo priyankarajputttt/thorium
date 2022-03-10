@@ -1,72 +1,101 @@
 
+const jwt = require("jsonwebtoken");
+const userModel = require("../models/userModel");
 
+const createUser = async function (req, res) {
+  try {
+    let data = req.body;
+    if (Object.keys(data).length > 0) {
+      let user = await userModel.create(req.body);
+      res.status(201).send({ status: true, msg: user });
+    } else {
+      res.status(400).send({ error: "Please provide input data" });
+    }
+  } catch (error) {
+        res.status(500).send({ error: error.message });
+  }
+};
 
-  const userModel = require("../models/userModel.js")
-  const productModel = require("../models/loginModel.js")
-  const jwt = require('jsonwebtoken')
-  
-  
-  
-  const createUser = async function(req, res) {
-      var data = req.body
-      let savedData = await userModel.create(data)
-      res.send({ data: savedData })
+const userLogin = async function (req, res) {
+  try {
+    let userName = req.body.emailId;
+    let password = req.body.password;
+
+    if (userName && password) {
+      let user = await userModel.findOne({
+        emailId: userName,
+        password: password,
+      });
+      if (!user)
+        return res
+          .status(404)
+          .send({ status: false, msg: "username or password is incorrect " });
+
+      let userToken = jwt.sign({ userId: user._id.toString() }, "SurajDubey");
+
+      res.status(200).send({ status: true, msg: userToken });
+    } else {
+      res.status(400).send({ status: false, error: "Please provide user inputs" });
+    }
+  } catch (error) {
+    res.status(500).send({ error: error.message });
   }
-  
-  const login = async function(req, res) {
-      let check = await userModel.findOne({ password: req.body.password, email: req.body.email, isDeleted: false })
-      if (check) {
-          let payload = { _id: check._id }
-          let token = jwt.sign(payload, 'RadiumSecret')
-          res.send({ "msg": "true", "data": check, "tokendetail": token })
-      } else {
-          res.send({ "msg": "false" })
-      }
+};
+
+const getUser = async function (req, res) {
+  try{
+
+    let id = req.params.userId;
+    let userById = await userModel.findById(id);
+    
+      res.status(200).send({ status: true, msg: userById });
+    
+  }catch (error) {
+    res.status(500).send({error: error.message})
   }
-  const dataById = async function(req, res) {
-      let userId = req.params.userId
-      let tokenUserid = req.body.validToken._id
-      if (tokenUserid == userId) {
-          let check = await userModel.findById(userId)
-          if (check) {
-              res.send({ "status": "true", data: { check } })
-          } else {
-              res.send({ "status": "true", "msg": "#error-response-structure" })
-          }
-  
-      } else {
-          res.send({ status: false, msg: "not authorized user" })
-      }
-  
-  
+};
+
+const updateUserData = async function (req, res) {
+  try{
+  let id = req.params.userId;
+  let data = req.body;
+  if(Object.keys(data).length > 0){
+
+    let updateUser = await userModel.findByIdAndUpdate(
+      { _id: id },
+      { $set: data },
+      { new: true }
+    );
+    res.status(200).send({ status: true, msg: updateUser });
+  }else{
+    res.status(400).send({status : false, msg: "provide input data"})
   }
-  
-  const updateName = async function(req, res) {
-      let userId = req.params.userId
-      let tokenUserid = req.body.validToken._id
-      if (tokenUserid == userId) {
-          let check = await userModel.findById(userId)
-          let newName = req.body.name
-          if (check) {
-              await userModel.findOneAndUpdate({ _id: userId, name: newName })
-              res.send({ status: "updated", data: { check } })
-          } else {
-              res.send({ "msg": "#error-response-structure" })
-          }
-  
-      } else {
-          res.send({ status: false, msg: "user is not authorized" })
-      }
   }
+  catch (error) {
+    res.status(500).send({error : error.message})
+  }
+};
+
+const deleteUserData = async function (req, res) {
+  try {
+
+    let id = req.params.userId;
+    let deleteUser = await userModel.findByIdAndUpdate(
+      { _id: id },
+      { $set: { isDeleted: true } },
+      { new: true }
+      );
+      res.status(201).send({ status: true, msg: deleteUser })
+    }catch (error){
+        res.status(500).send({error :error.message})
+    }
+  }
+    
+
+module.exports.createUser = createUser;
+module.exports.userLogin = userLogin;
+module.exports.getUser = getUser;
+module.exports.updateUserData = updateUserData;
+module.exports.deleteUserData = deleteUserData;
+
   
-  
-  
-  
-  
-  
-  
-  
-  module.exports.createUser = createUser
-  module.exports.login = login
-  module.exports.dataById = dataById
-  module.exports.updateName = updateName
